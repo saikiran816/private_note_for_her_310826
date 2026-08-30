@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>For Akshu</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Playfair+Display:ital,wght@0,500;1,400&display=swap');
+
+    :root {
+      --bg: #140f0f;
+      --text: #f3e9e0;
+      --soft: #c9a9a0;
+      --accent: #c9a9a0;
+    }
+
+    body.dark-mode {
+      --bg: #1a0a0a;
+      --text: #f0d6d6;
+      --soft: #c49a9a;
+      --accent: #e0a0a0;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      overflow-x: hidden;
+      position: relative;
+      transition: background 1.2s ease;
+    }
+
+    .particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      font-size: 13px;
+      opacity: 0.18;
+      animation: float 14s linear infinite;
+    }
+
+    body.dark-mode .particle {
+      opacity: 0.25;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.25; }
+      90% { opacity: 0.2; }
+      100% { transform: translateY(-15vh) rotate(360deg); opacity: 0; }
+    }
+
+    .pulse {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background: radial-gradient(circle at center, rgba(180, 60, 60, 0.09) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    body.dark-mode .pulse {
+      opacity: 1;
+      animation: heartbeat 3.1s ease-in-out infinite;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); opacity: 0.45; }
+      15% { transform: scale(1.04); opacity: 0.75; }
+      30% { transform: scale(1); opacity: 0.45; }
+      45% { transform: scale(1.025); opacity: 0.7; }
+      60% { transform: scale(1); opacity: 0.45; }
+    }
+
+    .container {
+      max-width: 430px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      z-index: 5;
+    }
+
+    .screen {
+      display: none;
+      animation: fadeUp 0.85s ease forwards;
+    }
+
+    .screen.active { display: block; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      font-weight: 500;
+      margin-bottom: 22px;
+      color: var(--text);
+    }
+
+    p {
+      font-size: 1.13rem;
+      line-height: 1.72;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .soft { color: var(--soft); font-size: 1.03rem; }
+
+    button {
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--text);
+      padding: 13px 28px;
+      font-size: 1rem;
+      font-family: inherit;
+      cursor: pointer;
+      margin-top: 18px;
+      transition: all 0.3s ease;
+      border-radius: 40px;
+    }
+
+    button:hover {
+      background: var(--accent);
+      color: #1a1212;
+      transform: translateY(-2px);
+    }
+
+    .choice {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      text-align: left;
+      padding: 14px 20px;
+      border-radius: 14px;
+    }
+
+    .signature {
+      margin-top: 36px;
+      font-style: italic;
+      color: var(--soft);
+      font-size: 1.18rem;
+    }
+
+    .secret-box {
+      margin-top: 48px;
+      padding-top: 28px;
+      border-top: 1px solid rgba(201, 169, 160, 0.25);
+    }
+
+    .secret-box input {
+      background: #2a1f1f;
+      border: 1px solid #5c4545;
+      color: #f3e9e0;
+      padding: 11px 14px;
+      font-size: 1.1rem;
+      width: 74px;
+      text-align: center;
+      margin: 0 6px;
+      border-radius: 10px;
+      font-family: inherit;
+    }
+
+    .error {
+      color: #d4a0a0;
+      font-size: 0.95rem;
+      margin-top: 14px;
+      display: none;
+    }
+
+    .glow {
+      text-shadow: 0 0 20px rgba(224, 160, 160, 0.3);
+    }
+
+    /* Promise interaction */
+    .promise-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+
+    #noBtn {
+      transition: all 0.4s ease;
+    }
+
+    .promise-note {
+      margin-top: 18px;
+      font-size: 0.95rem;
+      color: var(--soft);
+      min-height: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="particles" id="particles"></div>
+  <div class="pulse"></div>
+
+  <div class="container">
+
+    <!-- OUTER LAYER -->
+    <div class="screen active" id="screen1">
+      <p class="soft">Loading something only meant for you...</p>
+      <p style="font-size:1.9rem; margin:26px 0; opacity:0.7;">♥</p>
+      <button onclick="next(2)">Continue</button>
+    </div>
+
+    <div class="screen" id="screen2">
+      <h1>A small truth</h1>
+      <p>I didn’t build this because I wanted to impress you.</p>
+      <p>I built it because some feelings are too quiet for paper alone.</p>
+      <button onclick="next(3)">Keep going</button>
+    </div>
+
+    <div class="screen" id="screen3">
+      <h1>What I love most</h1>
+      <p>Not the big moments.</p>
+      <p>The ordinary ones.</p>
+      <p class="soft">
+        The way you become part of the quiet hours.<br>
+        The way random things turn into long conversations.<br>
+        The way I keep choosing you, even on the days I’m difficult.
+      </p>
+      <button onclick="next(4)">Next</button>
+    </div>
+
+    <div class="screen" id="screen4">
+      <h1>One question</h1>
+      <p>What do you think the future looks like for us?</p>
+      <button class="choice" onclick="next(5)">Soft mornings and shared silence</button>
+      <button class="choice" onclick="next(5)">Long conversations about nothing and everything</button>
+      <button class="choice" onclick="next(5)">Growing old while still being a little stupid together</button>
+      <button class="choice" onclick="next(5)">All of the above</button>
+    </div>
+
+    <div class="screen" id="screen5">
+      <h1>You’re right</h1>
+      <p>I don’t need grand plans.</p>
+      <p>I just want more ordinary days with you in them.</p>
+      <p class="soft">
+        More mornings.<br>
+        More quiet evenings.<br>
+        More reasons to choose you again.
+      </p>
+      <button onclick="next(6)">One last thing</button>
+    </div>
+
+    <div class="screen" id="screen6">
+      <p class="glow" style="font-size:1.3rem; margin-bottom:22px;">Happy birthday, Akshu.</p>
+      <p>I hope we keep becoming the kind of people who turn small days into something worth keeping.</p>
+      <p>Thank you for being mine.<br>Thank you for letting me be yours.</p>
+      <p class="signature">I love you.<br>Always.</p>
+
+      <div class="secret-box">
+        <p class="soft" style="margin-bottom:16px;">There’s one more thing… only you would know.</p>
+        <p style="font-size:1rem; margin-bottom:14px;">1 + 6 = ? &nbsp;&nbsp;&nbsp; 1 + 6 = ?</p>
+        <div>
+          <input type="text" id="ans1" maxlength="2" placeholder="?">
+          <input type="text" id="ans2" maxlength="2" placeholder="?">
+        </div>
+        <button onclick="checkSecret()" style="margin-top:18px;">Unlock</button>
+        <p class="error" id="errorMsg">Not quite… try again.</p>
+      </div>
+    </div>
+
+    <!-- DARK LAYER -->
+    <div class="screen dark" id="dark1">
+      <h1>You found it.</h1>
+      <p>Of course you did, Akshu.</p>
+      <p class="soft">I knew only you would.</p>
+      <button onclick="nextDark(2)">Continue</button>
+    </div>
+
+    <div class="screen dark" id="dark2">
+      <h1>I watched you</h1>
+      <p>I watched you the entire time I was on my knee.</p>
+      <p>In front of your parents. Your brother. Your sister. Everyone.</p>
+      <p class="soft">And while they were all looking at us,<br>I was already claiming you in a way none of them could see.</p>
+      <button onclick="nextDark(3)">Keep going</button>
+    </div>
+
+    <div class="screen dark" id="dark3">
+      <p>You once told me that if I ever surprised you hard enough…</p>
+      <p>if I ever made your heart race in front of everyone…</p>
+      <p>you would give me what you promised.</p>
+      <p class="soft">I did it today.<br>Publicly. Permanently.</p>
+      <p>Now that promise is mine to collect.</p>
+      <button onclick="nextDark(4)">I’m listening</button>
+    </div>
+
+    <!-- NEW INTERACTIVE PROMISE SCREEN -->
+    <div class="screen dark" id="dark4">
+      <h1>One question</h1>
+      <p style="font-size:1.25rem; margin-bottom:10px;">Are you going to keep your promise?</p>
+      
+      <div class="promise-buttons">
+        <button id="yesBtn" onclick="acceptPromise()">Yes</button>
+        <button id="noBtn" onclick="rejectPromise()">No</button>
+      </div>
+      <p class="promise-note" id="promiseNote"></p>
+    </div>
+
+    <div class="screen dark" id="dark5">
+      <h1>All week</h1>
+      <p>Every time you look at that ring,</p>
+      <p>I want your stomach to tighten.</p>
+      <p>I want you to feel it — that quiet, heavy reminder that you belong to me now in a way you can’t take back.</p>
+      <p class="soft">Smile at people. Talk normally. Act like nothing is different.<br>But I want that secret pressing against you the whole time.</p>
+      <button onclick="nextDark(6)">Continue</button>
+    </div>
+
+    <div class="screen dark" id="dark6">
+      <h1>When I get you alone</h1>
+      <p>I’m not going to ask.</p>
+      <p>I’m going to take.</p>
+      <p>I want to watch the shy part of you try to hold itself together<br>while I slowly pull it apart.</p>
+      <p class="soft">I want to see the exact moment your body gives in before your mouth does.</p>
+      <p>You can look away if you need to, baby.<br>I’ll still make you feel every second of it.</p>
+      <button onclick="nextDark(7)">More</button>
+    </div>
+
+    <div class="screen dark" id="dark7">
+      <div id="type1" style="white-space: pre-wrap; line-height: 1.7;"></div>
+      <button onclick="nextDark(8)" style="margin-top:28px;">One last thing</button>
+    </div>
+
+    <div class="screen dark" id="dark8">
+      <h1>You’re mine, Akshu</h1>
+      <p>Not just in the sweet ways.</p>
+      <p>In the deep, possessive, irreversible ways.</p>
+      <p class="soft">
+        I love the part of you that gets shy.<br>
+        I love the part of you that gets explicit.<br>
+        Both of them are mine now.
+      </p>
+      <p style="margin-top:26px;">
+        The next time we’re alone…<br>
+        I’m going to make sure you feel it in your knees.
+      </p>
+      <p class="signature">
+        I love you.<br>
+        And you’re mine.
+      </p>
+    </div>
+
+  </div>
+
+  <script>
+    // Particles
+    function createParticles() {
+      const container = document.getElementById('particles');
+      const symbols = ['♥', '✦', '✧', '♥', '♡'];
+      for (let i = 0; i < 24; i++) {
+        const el = document.createElement('div');
+        el.className = 'particle';
+        el.innerHTML = symbols[Math.floor(Math.random() * symbols.length)];
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.animationDuration = (10 + Math.random() * 12) + 's';
+        el.style.animationDelay = Math.random() * 9 + 's';
+        el.style.fontSize = (11 + Math.random() * 13) + 'px';
+        container.appendChild(el);
+      }
+    }
+    createParticles();
+
+    function next(num) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('screen' + num).classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    function nextDark(num) {
+      document.body.classList.add('dark-mode');
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('dark' + num).classList.add('active');
+      window.scrollTo(0, 0);
+
+      if (num === 7) {
+        const text = `I’m going to kiss you like I’m starving.
+Touch you like I already own every reaction.
+Hold you in place when you start to tremble.
+Make you feel completely, utterly claimed.
+
+And when I finally put you on your knees…
+I might not keep you there.
+
+I still remember that one playful thing you once mentioned —
+you on your back, head hanging off the edge of the bed, mouth open for me.
+
+I don’t know if you were serious.
+But I haven’t forgotten.
+And I decide how far we go.
+
+I’m still going to take my time with you, baby.
+Even after you’re already shaking.
+Even after you’re already done.
+Especially then.`;
+        
+        const el = document.getElementById('type1');
+        el.innerHTML = '';
+        let i = 0;
+        function type() {
+          if (i < text.length) {
+            el.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(type, 26);
+          }
+        }
+        type();
+      }
+    }
+
+    function checkSecret() {
+      const a1 = document.getElementById('ans1').value.trim();
+      const a2 = document.getElementById('ans2').value.trim();
+      const valid = ['8', '16'];
+
+      if (valid.includes(a1) && valid.includes(a2)) {
+        document.getElementById('errorMsg').style.display = 'none';
+        nextDark(1);
+      } else {
+        document.getElementById('errorMsg').style.display = 'block';
+      }
+    }
+
+    // Promise interaction
+    let noClicks = 0;
+    const noMessages = [
+      "Try again, baby.",
+      "That’s not the answer I’m accepting.",
+      "You’re only making me more serious.",
+      "The No button is getting tired...",
+      "There’s only one real answer left."
+    ];
+
+    function rejectPromise() {
+      noClicks++;
+      const noBtn = document.getElementById('noBtn');
+      const note = document.getElementById('promiseNote');
+      const yesBtn = document.getElementById('yesBtn');
+
+      // Shrink No button
+      const scale = Math.max(0.35, 1 - (noClicks * 0.15));
+      noBtn.style.transform = `scale(${scale})`;
+      noBtn.style.opacity = Math.max(0.3, 1 - (noClicks * 0.15));
+
+      if (noClicks <= noMessages.length) {
+        note.textContent = noMessages[noClicks - 1];
+      }
+
+      if (noClicks >= 5) {
+        noBtn.style.display = 'none';
+        yesBtn.textContent = "Yes for lifetime";
+        yesBtn.style.transform = "scale(1.15)";
+        note.textContent = "There’s only one option now.";
+      }
+    }
+
+    function acceptPromise() {
+      nextDark(5);
+    }
+  </script>
+</body>
+</html>
